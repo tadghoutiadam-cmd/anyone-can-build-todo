@@ -31,3 +31,10 @@ class TodoTests(TestCase):
         todo = Todo.objects.create(title="Call home")
         self.client.post(reverse("todo_delete", args=[todo.pk]))
         self.assertEqual(Todo.objects.count(), 0)
+
+    def test_count_remaining_todos(self):
+        Todo.objects.create(title="Task one", done=False)
+        Todo.objects.create(title="Task two", done=False)
+        Todo.objects.create(title="Task three", done=True)
+        response = self.client.get(reverse("todo_list"))
+        self.assertContains(response, "2 to do")

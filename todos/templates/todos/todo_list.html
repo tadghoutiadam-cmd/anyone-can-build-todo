@@ -25,6 +25,8 @@
     <button type="submit">Add</button>
   </form>
 
+  <p class="counter">{{ remaining_count }} to do</p>
+
   <ul>
     {% for todo in todos %}
       <li class="{% if todo.done %}done{% endif %}">
