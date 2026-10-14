@@ -22,8 +22,9 @@ def todo_list(request):
 @require_POST
 def todo_add(request):
     title = request.POST.get("title", "").strip()
+    due_date = request.POST.get("due_date", "").strip() or None
     if title:
-        Todo.objects.create(title=title)
+        Todo.objects.create(title=title, due_date=due_date)
     return redirect("todo_list")
 
 
