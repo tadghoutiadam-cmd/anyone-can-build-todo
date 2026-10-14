@@ -7,10 +7,15 @@ from .models import Todo
 def todo_list(request):
     todos = Todo.objects.all()
     remaining_count = Todo.objects.filter(done=False).count()
+    has_done_todos = Todo.objects.filter(done=True).exists()
     return render(
         request,
         "todos/todo_list.html",
-        {"todos": todos, "remaining_count": remaining_count},
+        {
+            "todos": todos,
+            "remaining_count": remaining_count,
+            "has_done_todos": has_done_todos,
+        },
     )
 
 
@@ -34,4 +39,10 @@ def todo_toggle(request, pk):
 def todo_delete(request, pk):
     todo = get_object_or_404(Todo, pk=pk)
     todo.delete()
+    return redirect("todo_list")
+
+
+@require_POST
+def todo_clear_finished(request):
+    Todo.objects.filter(done=True).delete()
     return redirect("todo_list")

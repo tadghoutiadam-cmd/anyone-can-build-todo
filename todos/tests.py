@@ -38,3 +38,21 @@ class TodoTests(TestCase):
         Todo.objects.create(title="Task three", done=True)
         response = self.client.get(reverse("todo_list"))
         self.assertContains(response, "2 to do")
+
+    def test_clear_finished_deletes_only_done_todos(self):
+        Todo.objects.create(title="Active task", done=False)
+        Todo.objects.create(title="Completed task 1", done=True)
+        Todo.objects.create(title="Completed task 2", done=True)
+        response = self.client.post(reverse("todo_clear_finished"))
+        self.assertRedirects(response, reverse("todo_list"))
+        self.assertEqual(Todo.objects.count(), 1)
+        self.assertEqual(Todo.objects.first().title, "Active task")
+
+    def test_clear_finished_button_visibility(self):
+        Todo.objects.create(title="Active task", done=False)
+        response = self.client.get(reverse("todo_list"))
+        self.assertNotContains(response, "Clear finished")
+
+        Todo.objects.create(title="Done task", done=True)
+        response = self.client.get(reverse("todo_list"))
+        self.assertContains(response, "Clear finished")
