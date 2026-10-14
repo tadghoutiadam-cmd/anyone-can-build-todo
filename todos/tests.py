@@ -38,6 +38,7 @@ class TodoTests(TestCase):
         Todo.objects.create(title="Task three", done=True)
         response = self.client.get(reverse("todo_list"))
         self.assertContains(response, "2 to do")
+
     def test_add_todo_with_due_date(self):
         self.client.post(
             reverse("todo_add"),
