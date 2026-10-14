@@ -38,3 +38,18 @@ class TodoTests(TestCase):
         Todo.objects.create(title="Task three", done=True)
         response = self.client.get(reverse("todo_list"))
         self.assertContains(response, "2 to do")
+
+    def test_add_todo_with_due_date(self):
+        self.client.post(
+            reverse("todo_add"),
+            {"title": "Submit assignment", "due_date": "2026-10-30"},
+        )
+        todo = Todo.objects.get(title="Submit assignment")
+        self.assertEqual(str(todo.due_date), "2026-10-30")
+        response = self.client.get(reverse("todo_list"))
+        self.assertContains(response, "2026-10-30")
+
+    def test_add_todo_without_due_date(self):
+        self.client.post(reverse("todo_add"), {"title": "No due date task"})
+        todo = Todo.objects.get(title="No due date task")
+        self.assertIsNone(todo.due_date)
