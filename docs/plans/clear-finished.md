@@ -18,7 +18,7 @@ If there are no finished to-dos, the button is either hidden or disabled so user
 
 ## 4. Files and functions touched
 - `todos/urls.py`: Add route `path("clear-finished/", views.todo_clear_finished, name="todo_clear_finished")`.
-- `todos/views.py`: 
+- `todos/views.py`:
   - Update `todo_list` context to include `has_done_todos = Todo.objects.filter(done=True).exists()`.
   - Add `@require_POST def todo_clear_finished(request)`.
 - `todos/templates/todos/todo_list.html`: Render the "Clear finished" form/button below or near the list when `has_done_todos` is True.
