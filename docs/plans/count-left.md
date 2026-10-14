@@ -27,6 +27,8 @@ If all items are done (or there are no items), display "0 to do" (or appropriate
 ## 5. Objections and decisions (Maker-Checker Review)
 | Objection / Edge Case | Assessment | Decision |
 |---|---|---|
-| What if there are zero tasks in total? | Should display "0 to do" without crashing. | Accepted: filter count handles empty queryset safely (returns 0). |
-| What if all tasks are marked done? | Counter should show "0 to do". | Accepted: covered by `filter(done=False)`. |
-| Performance if list grows large? | `Todo.objects.filter(done=False).count()` runs an efficient `SELECT COUNT(*)` in SQL. | Accepted: standard Django pattern. |
+| What if there are zero tasks in total? | Should display "0 to do" without crashing. | **Accepted**: QuerySet count handles an empty table safely and returns 0. |
+| What if all tasks are marked done? | Counter should show "0 to do". | **Accepted**: Covered by `filter(done=False)`. |
+| Performance if list grows large? | `Todo.objects.filter(done=False).count()` runs an efficient `SELECT COUNT(*)` in SQL. | **Accepted**: Standard Django pattern; does not load objects into memory. |
+| Should we use client-side JavaScript to update the counter live without reloading? | Every action (Add, Done, Undo, Delete) already reloads the page via POST. Adding JS adds unnecessary complexity and breaks simple testing. | **Rejected**: Server-side Django rendering is simpler, completely reliable, and requires zero JavaScript dependencies. |
+| Should we put the counter in an HTML `<footer>` element? | A `<footer>` placed directly in `<body>` is announced by screen readers as the landmark footer for the entire page. | **Rejected**: Use `<p class="counter">` above the list instead so assistive tools don't misinterpret page landmarks. |
